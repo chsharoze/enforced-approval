@@ -1,0 +1,28 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+type: software
+title: "Enforced Approval: Server-side approval of exact agent actions"
+authors:
+  - family-names: Iftikhar
+    given-names: Sharoze
+    orcid: "https://orcid.org/0009-0007-6846-939X"
+version: "0.1-draft"
+date-released: 2026-11-20
+license:
+  - CC-BY-4.0
+  - Apache-2.0
+abstract: >-
+  This draft specification states the rules a server follows to refuse an AI agent's write unless an
+  approval exists for that exact change. The server hashes the change, refuses it without a matching
+  approval, and lets a person approve it on the server's own page or through a signed receipt, with
+  single use, bounded grants and a hash-chained audit record. The release includes conformance tests,
+  test vectors and a sandbox server.
+keywords:
+  - AI agents
+  - approval
+  - authorization
+  - MCP
+  - Model Context Protocol
+  - human in the loop
+  - audit
+  - specification

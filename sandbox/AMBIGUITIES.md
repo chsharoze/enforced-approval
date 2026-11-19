@@ -1,0 +1,49 @@
+# Implementation notes
+
+The readings the sandbox chose where the specification leaves a choice, and the limits of what its
+tests cover.
+
+## Core and receipts
+
+- Account/target mismatch fixtures first establish permission and issuer scope. Unknown keys/signatures are invalid; unavailable registries/caches are unavailable. Receipt expiry is exclusive with configured skew; grants/pending records have none.
+- Preconditions hash changed properties and enforce versions; creates require absence. Queries bind selected IDs. Read proofs require permission. Static keys are authoritative; offline providers model refresh. No network JWKS retrieval occurs.
+- Tests 6/39 cannot establish every deployment instance; 62/63 retain browser-framing/external-TLS limits. Loopback models the tunnel backend. HTTPS origins require TLS or an overwritten trusted proxy header and add HSTS; public plaintext enforcement belongs to the tunnel.
+- Restart tests cannot establish every power-loss window. Used IDs/counters persist indefinitely. Parsed MCP hides duplicate JSON names. Policy registration is needed after restart. Audit failure cannot audit itself; tail deletion/full rewriting need external anchoring.
+- Authentication is synthetic. The sign-in shell reveals no change. Revocation linearizes at consumption; previously charged work may finish.
+
+## Grants
+
+- The grant shapes on the wire are these_records/any_record; anyRecord enables the latter. Fixed IDs are sorted/unique and allow subsets; duplicate entries still count. Missing finite caps disable grants.
+- Fields are escaped JSON Pointer leaves. Objects merge by leaf; empty containers/scalar replacements name only their parent. Arrays/deletion require ordinary approval.
+- First decisions are immutable; exact authorized retries return their first result only while unexpired/unconsumed. Test 75 takes precedence afterward. Reservations permit concurrent veto; approval, checks, charge, used ID and consumption audit commit together. Failed charges exclude that grant for the attempt.
+- Record/field permissions inherit operation permission; membership is separate. Maker authority is rechecked during consumption. Sign-in return paths are server-stored. Test 76 checks escaping/CSP structurally.
+- Undefined fields fail before any approval exists, following the stronger reading of the requirement even though test 85 mentions an approval page. Definitions whitelist exact leaves per object type, including legacy fixture fields. Legacy requests without objectType use contact definitions; parent definitions never authorize children.
+- Newest means insertion order among grants for the same account, principal and operation. Reasons prioritize revoked, expired, insufficient remaining allowance, then outside. Outside identifies uncovered fields first; selector, audience and current-authority mismatches use the record/scope explanation because no separate status exists.
+- Fractional minutes round to the nearest whole second. Retries with the same normalized duration retain the first expiry. Protocol times use ISO UTC; numeric business-field values remain unchanged.
+- The grants list shows a remaining count only for active grants; used-up, expired and revoked grants show "-", and only active grants offer revocation (S57's "records used and remaining" is read as records used always, remaining only while usable).
+
+## Pages and messages
+
+- Script-free CSS expands only the selected shape's details. Trusted inline styling is allowed while scripts remain blocked. HTTP tests verify structure and forms; visual layout is unverified because no browser is available.
+- S57 asks for a duration or a date and time; the form uses duration (minutes) only, which the requirement permits ("or").
+- One time form on the pages: every page time is "D Mon YYYY, HH:MM UTC" inside <time>, including the "Grant record" details block, so no page carries an ISO timestamp. The only permitted ISO location, the collapsed "Raw saved change" details, contains no timestamps in the saved change. The MCP tool result text keeps ISO + UTC as a protocol surface, not a page. Raw epoch numbers are absent from pages.
+- The name map lives in src/presentation.mjs (OPERATION_NAMES, SELECTOR_NAMES, FIELD_NAMES). An unmapped defined property falls back to a tidied form of its JSON Pointer path (words split on /, _, - and capitalized). Technical identifiers stay visible, small and in parentheses after the readable name; test 89 asserts the exact "readable <small>(technical)</small>" rendering.
+- Unknown and expired approval links share the "This approval link has expired" page because the page layer cannot tell them apart; both next steps tell the person to ask the assistant again. All page errors use status 403 (404 for unknown paths, 426 for plaintext on HTTPS origins), and every error page is static text: the internal code goes to the page log, never the page, so error pages leak nothing from the record.
+- The page request log is one JSON line per request reaching the page handler, including PATCH /records and unknown paths as kind "other". The identifier is the first 8 characters of the approval or grant id in the URL, absent when the URL carries none. Internal error codes logged are the exception message (for example "expired", "permission_denied", "grant limits"), the refusal error for /records, or not_found/tls_required. Nothing is logged when VA_LOG is unset, so in-process runner tests write no page log; the combined server and the e2e suites set VA_LOG.
+- invalid_input's `invalid` member lists JSON Pointer leaf paths, matching the field naming the server documents; the message names them in the same form. Other invalid-input causes reuse the underlying serialization error to say what kind was refused (not a JSON object, lone surrogate, duplicate member name, unsafe integer). The effects-header refusal (S4) keeps its change_hash and also has a message.
+- The URL mode elicitation's message is the refusal's plain `message` verbatim, so the approval-page advice and any grant reason both appear where a client shows only that text.
+- Plurals: record counts render "1 record"/"N records" for the limit, used and remaining on the approval, confirmation and grants pages and in the tool result text; the approval-cap message pluralizes "approval request(s)". The grants table's used cell reads "0 of 1 record".
+- Message durations are for people only: the wording is "about N minutes (until HH:MM UTC)", computed from the refusal time plus retry_after, and below one minute it reads "under a minute", so no message or elicitation text contains a digit-plus-seconds count; the numeric retry_after member is unchanged in the refusal object.
+
+## Decided links and outcome pages
+
+- A second, different decision posted to a decided record returns the outcome page with status 403 and lead-in "A decision was already recorded for this change"; an identical retry keeps returning the stored first result with 200 while the record is unexpired and unconsumed, and after consumption the outcome page states the approval was already used. A decided record accepts no new decision at all, even from a session that never displayed it.
+- A request whose client already answered this change's elicitation (an approve inputResponse is present) is read as already having been given the link, so its refusal message also omits "Approval page:"; this keeps the elicitation text byte-equal to the following refusal message (test 92) and matches S59's "do not repeat the link". Clients that never declared URL mode and the HTTP mapping get the link appended to the message.
+- Cancelled records have no page decision to show, so their links use the not-valid page like expired ones; S50's outcome page covers only approved, denied and grant. Grant-decided records keep their outcome page after the retry deletes the pending row and after cleanup, because page_decisions rows and grant-claimed identities are retained.
+- The outcome page shows only the decision, its time, its current state and a next step (plus the grants link for grants), never the change: S50 forbids presenting the change as open or old values as current, so nothing from the record is rendered and no read-permission distinction arises (S53).
+- Outcome pages describe the state when viewed (S50, test 96). A grant-decided link reads "A standing grant was made from this change on <time>. It has not been used yet." until the shown change itself runs under that grant, then "... This change ran under that grant on <time>." An approval reads "It can be used until <time>" while unused and "It has already been used, on <time>, so it will not run again" afterwards. Use moments come from the consumption audit row (person approvals, keyed by receipt id) and the retained consumed pending row's claims (grants, keyed by the shown change's hash plus the grant id); the shown change's hash is stored in the page decision result to make that lookup possible. A grant charged by other changes but not by the shown change still reads "not used yet", which is what the wording claims.
+
+## End-to-end runs
+
+- To exercise a genuinely expired link over real HTTP, e2e-server-issued raises pendingCap to 50 for its decided-links block (earlier flows in the same run leave pending records counting against the principal) and briefly sets pendingLifetime to 1 second through the administrative settings surface; both are runtime configuration, not code paths.
+- e2e-server-issued restores pendingLifetime to 600 for its outcome-page block because the decided-links block set it to 1 second. The outcome checks rerun the exact change shown on the link (with a field older grants in the same run do not cover, so the grant made from that change is the one that matches) before and after it runs. The mutation grant-outcome-stale makes outcome() ignore grant use and is killed by runner test 96.

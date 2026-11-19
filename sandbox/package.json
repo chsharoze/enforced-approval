@@ -1,0 +1,23 @@
+{
+  "name": "enforced-approval-sandbox",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Sandbox server and test suites for the Enforced Approval draft specification.",
+  "license": "Apache-2.0",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "test": "node test/run.mjs",
+    "test:mutations": "node test/mutations.mjs",
+    "test:blackbox": "node test/blackbox.mjs",
+    "test:e2e-server-issued": "node test/e2e-server-issued.mjs",
+    "test:e2e-http": "node test/e2e-http.mjs",
+    "test:e2e-origin": "node test/e2e-origin.mjs"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/client": "^2.4.0",
+    "@modelcontextprotocol/server": "^2.4.0"
+  }
+}
