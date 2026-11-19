@@ -2,6 +2,8 @@
 
 Server-side approval of exact agent actions.
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24379987.svg)](https://doi.org/10.5281/zenodo.24379987)
+
 This is a draft specification for servers that write to a system of record on behalf of an AI agent.
 The server refuses a guarded write unless a person, a grant or a policy approved that exact change.
 The check runs on the server, so it holds even when the client does not ask anyone.
@@ -113,8 +115,11 @@ The observations that motivated this work are described in a separate paper.
 Open an issue in this repository. Say which document and which requirement or test number you mean.
 
 ## How to cite
-Sharoze Iftikhar. Enforced Approval: Server-side approval of the exact change, for
-MCP and HTTP. Draft 0.1, 2026-11-20. DOI: DOI-PENDING. See also `CITATION.cff`.
+Sharoze Iftikhar. Enforced Approval: Server-side approval of exact agent actions. Draft 0.1, 2026.
+Zenodo. https://doi.org/10.5281/zenodo.24379987
+
+That DOI always points to the latest version. Draft 0.1 itself is
+https://doi.org/10.5281/zenodo.24379988. See also `CITATION.cff`.
 
 ## Licences
 The specification text is licensed under CC BY 4.0. The code, everything under `sandbox/` and
