@@ -2,7 +2,7 @@
 
 Server-side approval of exact agent actions.
 
-[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.24379987.svg)](https://doi.org/10.5281/zenodo.24379987)
+[![DOI](https://zenodo.org/badge/1464578191.svg)](https://doi.org/10.5281/zenodo.24379987)
 
 This is a draft specification for servers that write to a system of record on behalf of an AI agent.
 The server refuses a guarded write unless a person, a grant or a policy approved that exact change.
