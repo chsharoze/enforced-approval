@@ -4,6 +4,10 @@ Server-side approval of exact agent actions.
 
 [![DOI](https://zenodo.org/badge/1464578191.svg)](https://doi.org/10.5281/zenodo.24379987)
 
+> **Known issue in Draft 0.1 (2026-11-25).** In Draft 0.1 a refusal can disclose record state to
+> the agent. Draft 0.2, in development, fixes it. Until then, see "Known issue in Draft 0.1" in
+> `SECURITY.md` for what an implementation should do.
+
 This is a draft specification for servers that write to a system of record on behalf of an AI agent.
 The server refuses a guarded write unless a person, a grant or a policy approved that exact change.
 The check runs on the server, so it holds even when the client does not ask anyone.
