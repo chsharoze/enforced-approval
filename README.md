@@ -143,7 +143,8 @@ Open an issue in this repository. Say which document and which requirement or te
 Sharoze Iftikhar. Enforced Approval: Server-side approval of exact agent actions. Draft 0.2, 2026.
 Zenodo. https://doi.org/10.5281/zenodo.24379987
 
-That DOI always points to the latest archived version. Draft 0.1 is
+That DOI always points to the latest archived version. Draft 0.2 is
+https://doi.org/10.5281/zenodo.24570637 and Draft 0.1 is
 https://doi.org/10.5281/zenodo.24379988. See also `CITATION.cff`.
 
 ## Licence
