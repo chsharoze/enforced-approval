@@ -8,9 +8,9 @@
       "orcid": "0009-0007-6846-939X"
     }
   ],
-  "description": "This draft specification states the rules a server follows to refuse an AI agent's write unless an approval exists for that exact change. The server hashes the change, refuses it without a matching approval, and lets a person approve it on the server's own page or through a signed receipt, with single use, bounded grants and a hash-chained audit record. The release includes conformance tests, test vectors and a sandbox server. Draft 0.1. The specification text is licensed under CC BY 4.0; the code under sandbox/ and vectors/ is licensed under the Apache License 2.0.",
-  "version": "0.1-draft",
-  "license": "cc-by-4.0",
+  "description": "This draft specification states the rules a server follows to refuse an AI agent's write unless an approval exists for that exact change. The server hashes the change, refuses it without a matching approval, and lets a person approve it on the server's own page or through a signed receipt, with single use, bounded grants and a hash-chained audit record. The release includes conformance tests, test vectors and a sandbox server. Draft 0.2. The specification text and the code are licensed under the Apache License 2.0; Draft 0.1 kept its specification text under CC BY 4.0.",
+  "version": "0.2.0",
+  "license": "apache-2.0",
   "keywords": [
     "AI agents",
     "approval",

@@ -18,7 +18,8 @@ export function cases({helpers:{setup,req,ask,browser,grant},call,A}) {
       const change={...f.core.prepare(req(f)).change,arguments:r.args};assert.equal(f.pending.grants.offer(change,person),undefined);assert(!f.pending.grants.match(change));
       const {g}=await grant(f);const pending=f.core.db.prepare('SELECT count(*) n FROM pending').get().n;const out=call(f,r);assert.equal(out.approval.error,'invalid_input');assert.equal(f.core.db.prepare('SELECT count(*) n FROM pending').get().n,pending);assert.equal(live(f,g).charged,0);assert.equal(f.count(),0);
       assert.throws(()=>f.sor.write(A,r.args.records,'update','contact'),/invalid_input/);assert.equal(f.count(),0);
-      for(const operation of [QUERY,CREATE]) {const args=operation===QUERY?{objectType:'contact',filter:{},set:{not_a_defined_property:'bad'}}:{objectType:'contact',id:'no-created',properties:{not_a_defined_property:'bad'}};assert.equal(call(f,f.req(args,{operation})).approval.error,'invalid_input');}
+      const q=setup({preconditions:true});
+      for(const operation of [QUERY,CREATE]) {const x=operation===QUERY?q:f;const args=operation===QUERY?{objectType:'contact',filter:{},set:{not_a_defined_property:'bad'}}:{objectType:'contact',id:'no-created',properties:{not_a_defined_property:'bad'}};assert.equal(call(x,x.req(args,{operation})).approval.error,'invalid_input');}
       const nested=req(f);nested.args.records[0].properties={profile:{undefined_child:'bad'}};assert.equal(call(f,nested).approval.error,'invalid_input');
       for(const property of ['owner','lifecycle_stage','notes','email','phone','company'])assert(f.sor.defined('contact',{[property]:'v'}));assert(!f.sor.defined('deal',{phone:'v'}));
     },
@@ -45,5 +46,5 @@ export function cases({helpers:{setup,req,ask,browser,grant},call,A}) {
     },
     async function wording() {for(const shape of ['these_records','any_record']) {const f=setup(),{g}=await grant(f,req(f),5,f.now()+500,shape),out=mcpResult(call(f,req(f))),text=out.content.filter(c=>c.type==='text').map(c=>c.text).join('\n');for(const phrase of ['grant','standing permission','not an approval of this one change',g.id,shapeWords(shape),'records remaining: 4 records',formatTime(g.expires)])assert(text.includes(phrase),text);assert(!text.includes(String(g.expires)));}}
   ];
-  return {tests,names:['Any-record scope warning','Defined properties only','Grant refusal reasons','Readable pages and states','Standing grant result wording']};
+  return {tests,names:['Any-record warning','Undefined property','Why no grant applied','Readable pages','Grant wording']};
 }

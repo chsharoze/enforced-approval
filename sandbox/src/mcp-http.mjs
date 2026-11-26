@@ -7,7 +7,8 @@ import { pathToFileURL } from 'node:url';
 import { createMcpHandler } from '@modelcontextprotocol/server';
 import { build } from './mcp-server.mjs';
 import { runtime } from './runtime.mjs';
-import { createHandler } from './http.mjs';
+import { createHandler, clientScheme, recordDisclosure } from './http.mjs';
+import { mutated } from './core.mjs';
 
 const revisions=['2026-07-28','2025-11-25'];
 const prefix='io.modelcontextprotocol/';
@@ -37,7 +38,7 @@ function outcome(message) {
   const result=message?.result;
   if (result?.resultType==='input_required' || result?.inputRequests) return 'input_required';
   if (result?.isError) {
-    let approval=result._meta?.['com.example.approval/refusal'];
+    let approval=result._meta?.['org.enforcedapproval/refusal'];
     if (!approval) try {approval=JSON.parse(result.content?.find(c=>c.type==='text')?.text);} catch {}
     return 'refused:'+(approval?.error ?? 'tool_error');
   }
@@ -46,7 +47,7 @@ function outcome(message) {
 function refusalOf(message) {
   const result=message?.result;
   if (result?.isError) {
-    let approval=result._meta?.['com.example.approval/refusal'];
+    let approval=result._meta?.['org.enforcedapproval/refusal'];
     if (!approval) try {approval=JSON.parse(result.content?.find(c=>c.type==='text')?.text);} catch {}
     return approval;
   }
@@ -67,11 +68,21 @@ export function createServer() {
   // Check log access before accepting requests. Logs are local synthetic test data.
   appendFileSync(logFile,'');
   const r=runtime(), pages=createHandler(r), seen=new Set();
+  // The connector serves the approval pages, so its operator console gets the sign-in
+  // secret once at start; the stdio server never prints it.
+  console.error(`Sandbox sign-in secret: ${r.core.signinSecret}`);
   const mcp=createMcpHandler(()=>build(r),{legacy:'stateless'});
   const endpoint='/mcp/'+token;
   const server=http.createServer(async (req,res)=>{
     if (!req.url?.startsWith('/mcp')) return pages(req,res);
     if (req.url!==endpoint) {res.writeHead(404);res.end('Not found');return;}
+    if (origin.protocol === 'https:' && clientScheme(req) !== 'https') {
+      // S79: the request reached the server over a plain client connection, so it is
+      // refused, recorded and reported to the account's administrators on the request log.
+      if(!mutated('tls-refusal-unrecorded'))
+        log(recordDisclosure(r,{channel:'mcp',operation:'mcp:http',credential:req.headers.authorization?'authorization':'path_token'}));
+      res.writeHead(426,{'content-type':'text/plain'});res.end('TLS required');return;
+    }
     const abort=new AbortController();
     req.on('aborted',()=>abort.abort());
     res.on('close',()=>{if (!res.writableFinished) abort.abort();});

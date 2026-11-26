@@ -8,9 +8,11 @@ import fs from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
 import { Sor } from '../src/sor.mjs';
 import { Core, OP } from '../src/core.mjs';
-const here = new URL('..', import.meta.url).pathname;
+import { fileURLToPath } from 'node:url';
+const here = fileURLToPath(new URL('..', import.meta.url));
 const PORT = 8799, BASE = `http://127.0.0.1:${PORT}`, db = here + `e2e-${process.pid}.sqlite`, pageLog = here + `e2e-pages-${process.pid}.log`;
-const env = { ...process.env, VA_ADMIN: 'e2e-admin', VA_MODE: 'server', VA_DB: db, PORT: String(PORT), VA_BASE_URL: BASE, VA_LOG: pageLog, NODE_NO_WARNINGS: '1' };
+const PATH_TOKEN = 'e2e-server-issued-path-token';
+const env = { ...process.env, VA_ADMIN: 'e2e-admin', VA_MODE: 'server', VA_DB: db, PORT: String(PORT), VA_BASE_URL: BASE, VA_LOG: pageLog, VA_SIGNIN_SECRET: 'e2e-server-issued-secret', VA_PATH_TOKEN: PATH_TOKEN, NODE_NO_WARNINGS: '1' };
 let n = 0, bad = 0;
 const check = (name, ok, detail = '') => { n++; if (!ok) bad++; console.log((ok ? 'ok   ' : 'FAIL ') + name + (ok ? '' : '  ' + detail)); };
 const web = spawn('node', [here + 'src/http.mjs'], { cwd: here, env, stdio: 'ignore' });
@@ -21,12 +23,15 @@ async function approveInBrowser(url, decision,shape='any_record',minutes=10,maxR
   const first = await fetch(url);
   const signinPage = await first.text();
   const preCookie=(first.headers.get('set-cookie')??'').split(';')[0],preCsrf=/name="csrf" value="([a-f0-9]+)"/.exec(signinPage)?.[1];
-  const s = await fetch(BASE + '/signin', { method: 'POST', headers:{cookie:preCookie},redirect: 'manual', body: new URLSearchParams({ person: 'test-person', csrf:preCsrf }) });
+  const s = await fetch(BASE + '/signin', { method: 'POST', headers:{cookie:preCookie},redirect: 'manual', body: new URLSearchParams({ person: 'test-person', csrf:preCsrf, secret: env.VA_SIGNIN_SECRET }) });
   const cookie = (s.headers.get('set-cookie') ?? '').split(';')[0];
   const page = await (await fetch(url, { headers: { cookie } })).text();
   const csrf = /name="csrf" value="([a-f0-9]+)"/.exec(page)?.[1];
   const before=count();
-  const payload=new URLSearchParams({csrf,decision,...(decision==='grant'?{shape,max_records:maxRecords,minutes:String(minutes)}:{})});
+  // S68(4): for a covered operation the page's form names the displayed record; a real
+  // browser posts it back, so the driver does the same.
+  const record=/name="record" value="([a-f0-9]+)"/.exec(page)?.[1];
+  const payload=new URLSearchParams({csrf,decision,...(record?{record}:{}),...(decision==='grant'?{shape,max_records:maxRecords,minutes:String(minutes)}:{})});
   const done=await fetch(url,{method:'POST',headers:{cookie},body:payload}),doneText=await done.text();let replay;
   if(decision==='grant'){const before=grantCount(),again=await fetch(url,{method:'POST',headers:{cookie},body:payload});replay={status:again.status,text:await again.text(),noNewGrant:grantCount()===before};}
   return { signinPage, page, status: done.status, doneText,cookie,csrf,noWrite:count()===before,replay };
@@ -66,7 +71,7 @@ try {
   mode = 'deny';
   const d = await call('manage_records', args('user-EXAMPLE-9'));
   check('deny on the page: no write', (await read()).version === v0 + 1, JSON.stringify(d).slice(0, 200));
-  const ref = x => x?._meta?.['com.example.approval/refusal'];
+  const ref = x => x?._meta?.['org.enforcedapproval/refusal'];
   check('after deny the retry says approval_denied, with no new link', ref(d)?.error === 'approval_denied' && !ref(d)?.approval_url, JSON.stringify(ref(d) ?? d).slice(0, 240));
   const approveText = seen.find(s => /Approved/.test(s.pageInfo?.doneText ?? ''))?.pageInfo.doneText, denyText = seen.at(-1)?.pageInfo?.doneText ?? '';
   check('page text differs for approve and deny', /Denied/.test(denyText) && !!approveText && approveText !== denyText, denyText.slice(0, 120));
@@ -180,7 +185,7 @@ try {
   const afterPrompt=seen.at(-1);
   check('the elicitation message says to open the approval page and carries no link',afterPrompt?.mode==='url'&&afterPrompt.message.includes('Open the approval page')&&!afterPrompt.message.includes('/approve/')&&!afterPrompt.message.includes('Approval page: '),String(afterPrompt?.message));
   check('a refusal that followed an elicitation does not repeat the link',ref(withPrompt)?.message===afterPrompt?.message,String(ref(withPrompt)?.message));
-  const httpRefusal=await fetch(BASE+'/records',{method:'PATCH',body:JSON.stringify(otherArgs13('s13-http',{notes:'uncovered'}))});
+  const httpRefusal=await fetch(BASE+'/records',{method:'PATCH',headers:{authorization:'Bearer '+PATH_TOKEN},body:JSON.stringify(otherArgs13('s13-http',{notes:'uncovered'}))});
   const httpJson=JSON.parse(await httpRefusal.text());
   check('the HTTP mapping puts the approval link in the message itself',httpRefusal.status===403&&httpJson.approval?.error==='approval_required'&&httpJson.approval.message.includes('Approval page: '+httpJson.approval.approval_url),JSON.stringify(httpJson.approval).slice(0,240));
   check('no refusal or elicitation message names a protocol member',[afterPrompt?.message,ref(withPrompt)?.message,httpJson.approval?.message].every(m=>!['approval_url','grant_status','retry_after','change_hash'].some(n=>String(m).includes(n))),String(afterPrompt?.message));

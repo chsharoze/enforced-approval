@@ -14,13 +14,13 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
   const req=(f,owner='new-owner',extra={})=>f.req({...args(),records:[{id:'rec-EXAMPLE-42',properties:{lifecycle_stage:'customer',owner}}]},extra);
   function ask(f,r=req(f)) {const n=f.count(),out=call(f,r);assert.equal(out.ok,false,JSON.stringify(out));assert.equal(out.approval.error,'approval_required',JSON.stringify(out));assert.equal(f.count(),n);assert(out.approval.approval_url);return out.approval.approval_url.split('/').at(-1);}
   function browser(f) {
-    const handler=createHandler({core:f.core,sor:f.sor,account:A,principal:P,pending:f.pending});let cookie='',csrf='';
+    const handler=createHandler({core:f.core,sor:f.sor,account:A,principal:P,pending:f.pending});let cookie='',csrf='',record='';
     const b={async send(method,url,data='',headers={}) {
-      const request=Readable.from([String(data)]);Object.assign(request,{method,url,headers:{...(f.pending.baseURL.startsWith('https:')?{'x-forwarded-proto':'https'}:{}),...(cookie?{cookie}:{}),...headers},rawHeaders:[]});let status,h,body;
+      const request=Readable.from([String(data)]);Object.assign(request,{method,url,headers:{...(process.env.VA_PATH_TOKEN?{authorization:'Bearer '+process.env.VA_PATH_TOKEN}:{}),...(f.pending.baseURL.startsWith('https:')?{'x-forwarded-proto':'https'}:{}),...(cookie?{cookie}:{}),...headers},rawHeaders:[]});let status,h,body;
       await handler(request,{writeHead(s,v){status=s;h=v;},end(v){body=String(v);}});return {status,headers:h,body};
-    },async login(person='test-person') {const first=await b.send('GET','/grants');cookie=first.headers['set-cookie'].split(';')[0];const pre=/name="csrf" value="([a-f0-9]+)"/.exec(first.body)?.[1];const r=await b.send('POST','/signin',new URLSearchParams({person,csrf:pre}));assert.equal(r.status,303);cookie=r.headers['set-cookie'].split(';')[0];return r;},
-    async show(id,suffix='') {const r=await b.send('GET','/approve/'+id+suffix);const c=/name="csrf" value="([a-f0-9]+)"/.exec(r.body)?.[1];if(c)csrf=c;return r;},
-    decide(id,decision,more={}) {more={...more};if(Object.hasOwn(more,'expires')){more.minutes=(more.expires-f.now())/60;delete more.expires;}return b.send('POST','/approve/'+id,new URLSearchParams({csrf,decision,...(decision==='grant'?{shape:'any_record'}:{}),...more}));},
+    },async login(person='test-person') {const first=await b.send('GET','/grants');cookie=first.headers['set-cookie'].split(';')[0];const pre=/name="csrf" value="([a-f0-9]+)"/.exec(first.body)?.[1];const r=await b.send('POST','/signin',new URLSearchParams({person,csrf:pre,secret:f.core.signinSecret??''}));assert.equal(r.status,303);cookie=r.headers['set-cookie'].split(';')[0];return r;},
+    async show(id,suffix='') {const r=await b.send('GET','/approve/'+id+suffix);const c=/name="csrf" value="([a-f0-9]+)"/.exec(r.body)?.[1];if(c)csrf=c;const rid=/name="record" value="([a-f0-9]+)"/.exec(r.body)?.[1];record=rid??record;return r;},
+    decide(id,decision,more={}) {more={...more};if(Object.hasOwn(more,'expires')){more.minutes=(more.expires-f.now())/60;delete more.expires;}return b.send('POST','/approve/'+id,new URLSearchParams({csrf,decision,...(record?{record}:{}),...(decision==='grant'?{shape:'any_record'}:{}),...more}));},
     async list() {const r=await b.send('GET','/grants');const c=/name="csrf" value="([a-f0-9]+)"/.exec(r.body)?.[1];if(c)csrf=c;return r;},
     revoke(id) {return b.send('POST','/grants/'+id+'/revoke',new URLSearchParams({csrf}));},token:()=>csrf,cookie:()=>cookie};return b;
   }
@@ -28,7 +28,7 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
     const id=ask(f,r),b=browser(f);await b.login();const page=await b.show(id);assert.equal(page.status,200);const done=await b.decide(id,'grant',{max_records:limit,expires,shape});assert.equal(done.status,200,done.body);
     const g=f.pending.grants.get(f.core.db.prepare('SELECT id FROM server_grants ORDER BY rowid DESC').get().id);return {g,id,b,page,done};
   }
-  async function concurrent(f,requests) {
+  async function concurrent(f,requests,gatepoint='before-consume') {
     const gate=new SharedArrayBuffer(4),word=new Int32Array(gate);
     const code=`const {parentPort,workerData:d}=require('node:worker_threads');
       (async()=>{const {Sor}=await import(d.root+'src/sor.mjs'),{Core}=await import(d.root+'src/core.mjs'),{ServerIssued}=await import(d.root+'src/server-issued.mjs');
@@ -36,9 +36,9 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
         const ready=()=>{parentPort.postMessage({ready:true});Atomics.wait(new Int32Array(d.gate),0,0,10000);};let result;
         if(d.req.decision){ready();try{result={decision:pending.decide(d.req.id,{id:'test-person',authenticated:true},d.req.approve,d.req.session)};}catch(e){result={refused:e.message};}}
         else if(d.req.revoke){ready();pending.grants.revoke(d.req.account,d.req.revoke,{id:'test-person',authenticated:true});result={revoked:true};}
-        else {sor.inject('before-consume',ready);result=core.handle(d.req);}
+        else {sor.inject(d.gatepoint,ready);result=core.handle(d.req);}
         sor.close();parentPort.postMessage({result});})().catch(e=>{throw e;});`;
-    const workers=requests.map(req=>new Worker(code,{eval:true,workerData:{root:new URL('../',import.meta.url).href,db:f.db,admin,now:f.now(),req,gate}}));
+    const workers=requests.map(req=>new Worker(code,{eval:true,workerData:{root:new URL('../',import.meta.url).href,db:f.db,admin,now:f.now(),req,gate,gatepoint}}));
     let waiting=0;const results=workers.map(w=>new Promise((resolve,reject)=>{w.on('error',reject);w.on('exit',c=>{if(c)reject(Error('worker exited '+c));});w.on('message',m=>{if(m.ready&&++waiting===workers.length){Atomics.store(word,0,1);Atomics.notify(word,0);}if(m.result)resolve(m.result);});}));
     try{return await Promise.all(results);}finally{await Promise.all(workers.map(w=>w.terminate()));}
   }
@@ -56,7 +56,13 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
       f.core.admin(admin,'settings',{grantConfig:{[A]:{[OP]:{maxRecords:10,maxSeconds:1000,anyRecord:true},['mcp:tools/call:run_cleanup']:{maxRecords:10,maxSeconds:1000,anyRecord:true}}}});
       for(const operation of [OTHER,'mcp:tools/call:run_cleanup']) {const other=ask(f,{...r,operation,...(operation.endsWith('run_cleanup')?{args:{}}:{})});assert.doesNotMatch((await b.show(other)).body,/id="grant-terms"/);}
       for(const altered of [{...r,inputResponses:{approve:{action:'accept',content:{grant:{max_records:1000}}}}},{...r,args:{...r.args,grant:{max_records:1000}}},{...r,args:{...r.args,confirmation:'CONFIRMED'},inputResponses:{approve:{action:'accept',content:{confirmation:'CONFIRMED',grant:true}}}}]) {call(f,altered);assert.equal(count(f),0);assert.equal(f.count(),0);}
-      const done=await b.decide(id,'grant',{max_records:5,expires:f.now()+500});assert.equal(done.status,200);assert.equal(f.count(),0);assert.equal(f.pending.get(id).status,'pending');const g=f.pending.grants.get(f.core.db.prepare('SELECT id FROM server_grants').get().id);assert.equal(g.charged,0);
+      const done=await b.decide(id,'grant',{max_records:5,expires:f.now()+500});assert.equal(done.status,200);assert.equal(f.count(),0);
+      // S50: "Recording a decision or a grant is one atomic step ... and applies only if
+      // the record is still pending". S50, S70: the record is closed with
+      // that outcome in the transaction that records the grant, in the default mode as
+      // well as for a covered operation, so it is not open after the grant.
+      assert.equal(f.pending.get(id).status,'granted','the record is closed in the step that records the grant (S50, S70)');
+      const g=f.pending.grants.get(f.core.db.prepare('SELECT id FROM server_grants').get().id);assert.equal(g.charged,0);
       assert(call(f,r).ok);assert.equal(covered(f,g).charged,1);assert.equal(f.count(),1);
     },
     async function match() {
@@ -71,7 +77,7 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
       const f=setup(),{g}=await grant(f);f.core.db.prepare('UPDATE server_grants SET charged=4 WHERE id=?').run(g.id);
       const two=req(f,'two');two.args.records.push(structuredClone(two.args.records[0]));ask(f,two);assert.equal(covered(f,g).charged,4);
       const rs=await concurrent(f,['one-a','one-b'].map(v=>req(f,v)));assert.equal(rs.filter(r=>r.ok).length,1);assert.equal(rs.filter(r=>r.approval?.error==='approval_required').length,1);assert.equal(f.count(),1);assert.equal(covered(f,g).charged,5);assert(f.core.chainCheck().ok);
-      const q=setup();q.core.admin(admin,'settings',{grantConfig:{[A]:{[QUERY]:{maxRecords:10,maxSeconds:1000,anyRecord:true}}}});for(const id of ['q1','q2','q3'])q.sor.seed(A,id,{group:'q'});
+      const q=setup({preconditions:true});q.core.admin(admin,'settings',{grantConfig:{[A]:{[QUERY]:{maxRecords:10,maxSeconds:1000,anyRecord:true}}}});for(const id of ['q1','q2','q3'])q.sor.seed(A,id,{group:'q'});
       const qr=q.req({objectType:'contact',filter:{group:'q'},set:{owner:'q-owner'}},{operation:QUERY}),{g:qg}=await grant(q,qr);assert(call(q,qr).ok);assert.equal(q.count(),3);assert.equal(covered(q,qg).charged,3);
       const h=setup(),{g:hg}=await grant(h);h.sor.inject('before-consume',()=>h.core.db.prepare('UPDATE server_grants SET charged=5 WHERE id=?').run(hg.id));ask(h,req(h,'late'));assert.equal(h.count(),0);assert.equal(covered(h,hg).charged,5);assert.equal(h.core.db.prepare('SELECT count(*) n FROM used').get().n,0);
       const k=setup(),{g:kg}=await grant(k),saved=k.core.audit;k.core.audit=function(phase,...rest){if(phase==='consumption'){this.audit=saved;throw Error('injected audit failure');}return saved.call(this,phase,...rest);};assert.equal(call(k,req(k)).approval.error,'approval_unavailable');assert.equal(k.count(),0);assert.equal(covered(k,kg).charged,0);assert.equal(k.core.db.prepare('SELECT count(*) n FROM used').get().n,0);
@@ -116,8 +122,36 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
     },
     async function framing() {const f=setup(),id=ask(f),b=browser(f);const responses=[await b.show(id),await b.login(),await b.show(id),await b.list(),await b.decide(id,'approve')];for(const r of responses)assert.match(r.headers['content-security-policy'],/frame-ancestors 'none'/);return na('All page/decision headers forbid framing; actual embedding at another origin requires a browser and is not exercised in-process.');},
     async function transport() {const f=setup();f.pending.baseURL='https://approval.example';const id=ask(f),b=browser(f),before=f.core.records().length;
-      for(const [method,url] of [['GET','/approve/'+id],['GET','/grants'],['POST','/approve/'+id],['POST','/grants/abc/revoke'],['POST','/signin']]) {const r=await b.send(method,url,'',{ 'x-forwarded-proto':'http'});assert.equal(r.status,426);assert(!r.body.includes('new-owner'));}assert.equal(f.core.records().length,before);assert.equal((await b.send('GET','/approve/'+id,'',{'x-forwarded-proto':''})).status,426);
-      for(const r of [await b.show(id),await b.login(),await b.show(id),await b.decide(id,'approve'),await b.list()]){assert.equal(r.headers['cache-control'],'no-store');assert.equal(r.headers['strict-transport-security'],'max-age=31536000');}return na('Trusted loopback headers and HTTPS-origin HSTS/no-store are checked; no TLS tunnel or public plaintext endpoint is available to establish end-to-end transport.');},
+      for(const [method,url] of [['GET','/approve/'+id],['GET','/grants'],['POST','/approve/'+id],['POST','/grants/abc/revoke'],['POST','/signin']]) {const r=await b.send(method,url,'',{ 'x-forwarded-proto':'http'});assert.equal(r.status,426);assert(!r.body.includes('new-owner'));}
+      // S79: each refused plain-HTTP page request is recorded once and the record names
+      // the account's administrator; it is still not a decision.
+      const disclosed=f.core.records().slice(before);
+      assert.equal(disclosed.length,5,'each refused plain-HTTP page request is recorded once');
+      assert(disclosed.every(r=>r.record_phase==='security'&&r.action_detail?.reason==='tls_required'&&r.action_detail?.administrators?.includes('test-admin')),JSON.stringify(disclosed));
+      assert.equal((await b.send('GET','/approve/'+id,'',{'x-forwarded-proto':''})).status,426);
+      // A client-settable header claiming https is refused unless the server is configured behind that edge.
+      assert.equal((await b.send('GET','/approve/'+id,'',{'x-forwarded-proto':'https'})).status,426);
+      process.env.VA_EDGE_MARKER='x-forwarded-proto=https';
+      try {
+        for(const r of [await b.show(id),await b.login(),await b.show(id),await b.decide(id,'approve'),await b.list()]){assert.equal(r.headers['cache-control'],'no-store');assert.equal(r.headers['strict-transport-security'],'max-age=31536000');}
+      } finally { delete process.env.VA_EDGE_MARKER; }
+      // Real TLS and a public plaintext endpoint are not exercised in-process; the
+      // scheme decision and the configured edge marker are.
+      // S79: the same check guards the agent's endpoint. The HTTP request path is
+      // refused on a plain client connection, nothing is executed, and the disclosure is
+      // recorded once and reported to the administrator.
+      const agentBefore=f.core.records().length;
+      const refused=await b.send('PATCH','/records',JSON.stringify(req(f,'plain-http').args),{'x-forwarded-proto':'http'});
+      assert.equal(refused.status,426);assert(!refused.body.includes('new-owner'));assert.equal(f.count(),0);
+      const events=f.core.records().slice(agentBefore);
+      assert.equal(events.length,1,'one disclosure event is recorded for the refused plain-HTTP request');
+      assert.equal(events[0].record_phase,'security');
+      assert.equal(events[0].action_detail?.reason,'tls_required');
+      assert(events[0].action_detail?.administrators?.includes('test-admin'),JSON.stringify(events[0]));
+      assert.equal((await b.send('PATCH','/records',JSON.stringify(req(f,'plain-http-2').args))).status,426);
+      // The MCP request path over a plain connection is exercised end to end in
+      // test/e2e-http.mjs (src/mcp-http.mjs refuses it with 426 as well).
+    },
     async function stored() {const f=setup(),id=ask(f),b=browser(f);await b.login();const page=await b.show(id,'?owner=FORGED&summary=FORGED#FORGED');assert.equal(page.status,200);assert(page.body.includes('new-owner'));assert(!page.body.includes('FORGED'));},
     async function displayed() {
       const f=setup(),id=ask(f),other=ask(f,req(f,'other')),b=browser(f);await b.login();await b.show(id);
@@ -126,8 +160,19 @@ export function cases({fixture,args,call,A,P,OTHER,admin,na}) {
       const second=browser(f);await second.login();await second.show(other);assert.equal((await second.decide(id,'approve')).status,403);
       f.time(f.now()+3);assert.equal((await b.decide(id,'approve')).status,200);const row=f.core.records().find(r=>r.record_phase==='decision');assert.equal(row.action_detail.decided_at-row.action_detail.displayed_at,3);
     },
-    async function identifiers() {const f=setup({pendingCap:1100}),ids=[];for(let i=0;i<1000;i++){const r=f.core.handle(req(f,'identifier-'+i));assert.equal(r.approval?.error,'approval_required');ids.push(r.approval.approval_url.split('/').at(-1));}assert.equal(new Set(ids).size,1000);assert(ids.every(id=>/^[a-f0-9]{48}$/.test(id)));assert(new Set(ids.map(id=>id.slice(0,8))).size>990);const b=browser(f);await b.login();const mutated=(ids[0][0]==='a'?'b':'a')+ids[0].slice(1);assert.equal((await b.show(mutated)).status,403);const unauth=browser(f);assert(!(await unauth.show(ids[0])).body.includes('identifier-0'));assert.equal((await unauth.decide(ids[0],'approve')).status,403);},
+    // The registry's pending_cap ceiling is 100 (S27), so 1000 identifiers are collected
+    // in ten rounds, each round's records left behind by advancing the clock past the
+    // pending lifetime. Every assertion is unchanged.
+    async function identifiers() {
+      const f=setup({pendingCap:100}),ids=[];
+      for(let round=0;round<10;round++){
+        for(let i=0;i<100;i++){const r=f.core.handle(req(f,'identifier-'+round+'-'+i));assert.equal(r.approval?.error,'approval_required');ids.push(r.approval.approval_url.split('/').at(-1));}
+        f.time(f.now()+f.core.settings().pendingLifetime+1);
+      }
+      assert.equal(new Set(ids).size,1000);assert(ids.every(id=>/^[a-f0-9]{48}$/.test(id)));assert(new Set(ids.map(id=>id.slice(0,8))).size>990);
+      const b=browser(f);await b.login();const mutated=(ids[0][0]==='a'?'b':'a')+ids[0].slice(1);assert.equal((await b.show(mutated)).status,403);const unauth=browser(f);assert(!(await unauth.show(ids[0])).body.includes('identifier-0'));assert.equal((await unauth.decide(ids[0],'approve')).status,403);
+    },
     async function messages() {const messages=[];for(const decision of ['approve','deny','grant']){const f=setup(),id=ask(f),b=browser(f);await b.login();await b.show(id);const out=await b.decide(id,decision,{...(decision==='grant'?{max_records:5,expires:f.now()+500}:{})});assert.equal(out.status,200);messages.push(out.body);if(decision==='approve'){assert.match(out.body,/Approved/);assert(out.body.includes(readableTime(f.now()+300)),'the use window in the single page time form');}if(decision==='deny')assert.match(out.body,/Denied/);if(decision==='grant')for(const value of ['Granted',P,A,OP,'owner','Record limit','5 records','Records remaining',readableTime(f.now()+500)])assert(out.body.includes(value),value);}assert.equal(new Set(messages).size,3);}
   ];
-  return {helpers:{setup,req,ask,browser,grant,concurrent},tests,names:['Create server grant','Match server grant','Field coverage','Server grant limit','Server grant expiry','Server grant revocation','Grant audit type','Grant result text','Unclassified grant input','Denial/cancellation precede grants','Page session','Page request forgery','Page framing','Page transport/cache','Stored rendering','Session display binding','Approval identifiers','Decision messages']};
+  return {helpers:{setup,req,ask,browser,grant,concurrent},tests,names:['Create','Match','Field not covered','Limit','Expiry','Revoke','Audit type','Result text','Unclassified input','Denial and cancellation first','Session','Request forgery','Framing','Transport and caching','Rendered from the stored record','Displayed to that session','Approval URL identifier','Decision page text']};
 }

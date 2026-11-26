@@ -3,7 +3,7 @@
 **EXPERIMENTAL.** No client tested as of 2026-11-19 can carry a receipt on a tool call, so this profile
 has been exercised in-process only.
 
-Part of Draft 0.1, 2026-11-20. Author: Sharoze Iftikhar. Normative for a server that claims it. It extends the core document (`core.md`),
+Part of Draft 0.2, 2026-11-26. Author: Sharoze Iftikhar. Normative for a server that claims it. It extends the core document (`core.md`),
 whose terms, change hash, verification steps, refusals and requirements apply here unchanged.
 
 ## 1. What this profile is
@@ -22,22 +22,20 @@ the issuer's public key, but it proves only what the issuer says.
 ## 2. Flow
 
 1. The client sends the request without a receipt and receives `approval_required`.
-2. The client sends the `change` object from the refusal to one of the listed issuers.
+2. The client sends the `change` object from the refusal to one of the listed issuers. A covered operation (S67) lists no issuers (S66).
 3. The issuer computes the change hash itself (I1), obtains the decision and returns a receipt.
 4. The client sends the identical request again, carrying the receipt (Section 3).
 
 **Refusal members.** For `approval_required`, the refusal also has `issuers`: the identifiers of the
-issuers registered for this operation. Where `state_hash` or `resolved` is used, it also carries
-`current` (for each record, the object that `state_hash` covers) or `records` (the array that
-`manifest_hash` covers), so the issuer can check them against the hashes and show the approver the old
-values and the selected records (I1). The server includes them only if the credential may read those
-fields and records. If it may not, the operation cannot be approved through an organization's issuer.
+issuers registered for this operation. (The `current` and `records` refusal members are withdrawn in Draft 0.2; see S66.)
+
+- S66. A covered operation (S67) cannot be approved through an organization's issuer. For such an operation the server MUST NOT list `issuers`, whatever the principal may read, and MUST refuse a receipt presented for it with `approver_not_authorized`. Where the server does not offer the server-issued profile for a covered operation, or the account allows no approver type for it in that profile, the server MUST refuse every request for it with `approver_not_authorized`, without reading record state and with no `change_hash`. For a covered query the two clauses meet as follows. Where the server offers no server-issued profile for the operation, this clause applies to every request and takes precedence over S72: the answer is `approver_not_authorized` for a principal that holds the operation's write permission, before any S72 read-domain check, and does not vary with the principal's read domain or with record state. Where the server does offer the profile, this clause does not apply, and S72's `permission_denied` at step 1 of Section 6 is the only step 1 refusal for the query. The refusal members `current` and `records`, the last sentence of I1 and the clause of conformance test 40 on `current` and `records` are withdrawn.
 
 ## 3. Carrying a receipt
 
 - MCP: the client puts the receipt in `params._meta` of the `tools/call` request, under a key with a
-  vendor prefix, as the MCP specification requires for third-party keys [MCP-BASIC]. This draft uses
-  `com.example.approval/receipt` until a permanent name exists. This is the preferred form: the tool
+  vendor prefix, as the MCP specification requires for third-party keys [MCP-BASIC]. The key is
+  `org.enforcedapproval/receipt`. This is the preferred form: the tool
   schema does not change and the model does not see the receipt.
 - MCP, for clients that cannot set `_meta` on a tool call: the server SHOULD also declare an optional
   string argument `approval_receipt`. The server removes it before hashing, as it does approval fields,
@@ -61,7 +59,7 @@ object with these claims and no duplicate names:
 | `iss` | String. Issuer identifier (a URL). | P6 |
 | `aud` | String. The server identifier, equal to `audience` in the change object. | P2 |
 | `iat`, `exp` | Integers, seconds since the epoch, `iat` less than `exp`. | P4 |
-| `jti` | Non-empty string, unique per issuer. | P3 |
+| `jti` | Non-empty string, unique per issuer. It is the receipt identifier, recorded as `receipt_id` (core Section 10). | P3 |
 | `change_hash` | String. The change hash. | P1 |
 | `approver` | Object with `type` (`person`, `grant` or `policy`) and a non-empty `id`. For `grant`, `id` is the person who made the grant. | P5 |
 | `grant` | Present only for type `grant`: object with `id` (non-empty string), `max_records` (positive integer) and `expires` (integer, seconds since the epoch). | Section 7 |
@@ -124,8 +122,7 @@ minutes.
 
 - I1. For a person, the issuer MUST compute the change hash itself from the change object it was given
   and MUST display the operation, the account, the principal and every argument value from that same
-  object, never a summary written by the agent. Where the refusal carried `current` or `records`, it
-  MUST check them against `state_hash` or `manifest_hash` and display them.
+  object, never a summary written by the agent. (The Draft 0.1 last sentence of I1, on `current` and `records`, is withdrawn; see S66.)
 - I2. The issuer MUST authenticate the person on a channel the agent cannot operate, MUST check that
   the organization authorizes that person to approve this operation in this account, and MUST NOT
   issue a person receipt without that person's action on that change. Its record of the decision MUST
@@ -141,7 +138,8 @@ minutes.
   registered with it (for example the current state of a record, or the principal's earlier changes).
   Nothing the agent or the client supplies, other than the change object, may be an input. The
   receipt MUST record each such input by a reference and a hash, so the audit shows what the policy
-  saw without the policy itself being disclosed.
+  saw without the policy itself being disclosed. An input MAY be a value the issuer computes from several registered sources, or the output of a model or scoring service the organization registered. The reference then names the computation or the service, and its version, and the hash is of the exact value used. Nothing the agent or the client supplies, other than the change object, may be an input to that computation or service. The argument values in the change object are themselves written by the agent: a policy, computation or model that reads free-text values inside it can be steered by them. The issuer SHOULD limit a policy to the structured members of the change object, and an organization that registers a policy reading free text accepts that risk.
+- I5. An issuer MUST refuse a change object whose `v` it does not implement.
 
 The issuer writes an audit record for each approval and each denial. The server finds the issuer's
 decision record by `issuer` and `receipt_id`. Approval requests can be used to tire a person into

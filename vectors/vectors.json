@@ -52,10 +52,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc"
     },
     {
       "name": "V2-ai-flag-set",
@@ -95,10 +95,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc"
     },
     {
       "name": "V3-key-order",
@@ -137,10 +137,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc"
     },
     {
       "name": "V4-changed-argument",
@@ -179,10 +179,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-8\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "uCQcVcMyrPHCAFB-dPTyHcQxrxJyI_saqkI3PVGr7AI"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-8\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "Eo7HZgGDF-eFtjTTUMTtAyLPlxAu_WkyUwfrqBKkxwo"
     },
     {
       "name": "V5-wrong-account",
@@ -221,10 +221,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0002\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "tfa0FEWgnctAAcCQPKhQccAMvBtcIuC9DkN-DzXqAwE"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0002\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "Cuo__FZYqxAl9x_OQ-CQgAaIWez08LzVaVyxj45xvPY"
     },
     {
       "name": "V6-wrong-audience",
@@ -263,10 +263,10 @@
         "audience": "https://mcp.other.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.other.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "z8_oKqc9cI0UB94uPOQx_DjMtSrjjCJb7UDYAcs_AvY"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.other.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "6oNDqsYtpqP8b3qjCCLDHUgL9eABMN0U7TI-ignB8sk"
     },
     {
       "name": "V7-rest",
@@ -289,10 +289,10 @@
         "audience": "https://api.crm.example",
         "operation": "http:PATCH:/v1/objects/contact/rec-EXAMPLE-42",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}},\"audience\":\"https://api.crm.example\",\"operation\":\"http:PATCH:/v1/objects/contact/rec-EXAMPLE-42\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "116PdcSI2ww_7cf60Tz1b19ckcQ_z_WXjXwoEslY4ek"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}},\"audience\":\"https://api.crm.example\",\"operation\":\"http:PATCH:/v1/objects/contact/rec-EXAMPLE-42\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "YO8cFq-UNtBbxMPJK8_z-Si9DpT6UtP1MY5M5HwSBqA"
     },
     {
       "name": "V8-unicode-number",
@@ -335,10 +335,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"deal\",\"records\":[{\"id\":\"rec-EXAMPLE-43\",\"properties\":{\"amount\":1250.5,\"closed\":false,\"name\":\"Café €\",\"note\":null}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "bmnaxMbT2RmS4CZanPkEXpl6E_bgIzDj2ISwqfcmd5E"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"deal\",\"records\":[{\"id\":\"rec-EXAMPLE-43\",\"properties\":{\"amount\":1250.5,\"closed\":false,\"name\":\"Café €\",\"note\":null}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "zrQF-q1a54AMTuEA7nk-Rk4EyLlrSE4MldOJQxjC79I"
     },
     {
       "name": "V9-wrong-principal",
@@ -377,10 +377,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-other",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-other\",\"v\":1}",
-      "change_hash": "VYUd8PZL53FqSHWVtbp-I-ZePslpUn_CvUVyDPfZAi4"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"principal\":\"agent-EXAMPLE-other\",\"v\":2}",
+      "change_hash": "faU24KWtSAiS1RjuTr_vZZICgrSjgRHhhYkdFZtFOK4"
     },
     {
       "name": "V10-other-tool",
@@ -419,10 +419,10 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:delete_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:delete_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "vUB40bHdAV7uS6KPInRKW6S87uuvPJYgOse8l807TS0"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:delete_records\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "0OtyTGj_JoTZGDyJWSMRcLoc68N_lb1A0FDeOiCQLnE"
     },
     {
       "name": "V11-no-arguments",
@@ -435,14 +435,14 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:run_cleanup",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1
+        "v": 2
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:run_cleanup\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "M69IW6xaih9E13nrWeDc-nBlL4BoNBzPPT-Yht_nKwQ"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:run_cleanup\",\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "U-Y0zkBefWoYDk5Xuxt_1JhlLLiUxoNk_eMiSVG_e3k"
     },
     {
       "name": "V12-precondition",
-      "note": "V1 with a precondition: state_hash is the hash of the current values {\"lifecycle_stage\":\"lead\",\"owner\":\"user-EXAMPLE-3\"}.",
+      "note": "V1 with a precondition: state_hash is the HMAC-SHA-256 (S61, test key) of the current values {\"lifecycle_stage\":\"lead\",\"owner\":\"user-EXAMPLE-3\"}.",
       "request_arguments": {
         "objectType": "contact",
         "action": "update",
@@ -477,20 +477,20 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:manage_records",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1,
+        "v": 2,
         "preconditions": [
           {
             "record": "rec-EXAMPLE-42",
-            "state_hash": "Xrmb3zHHVJX4P4YjPtZL66xWp_RLPQV62lvP07UH_gM"
+            "state_hash": "Udb6o3UJ7Mi_6wBIuASGF-XsXWK9o-9TMSXdUe9rB4k"
           }
         ]
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"preconditions\":[{\"record\":\"rec-EXAMPLE-42\",\"state_hash\":\"Xrmb3zHHVJX4P4YjPtZL66xWp_RLPQV62lvP07UH_gM\"}],\"principal\":\"agent-EXAMPLE-sync\",\"v\":1}",
-      "change_hash": "K17ocsGjOW_qs8gWjoi0I0mXZovaKUM5lzSXQLI8URA"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"preconditions\":[{\"record\":\"rec-EXAMPLE-42\",\"state_hash\":\"Udb6o3UJ7Mi_6wBIuASGF-XsXWK9o-9TMSXdUe9rB4k\"}],\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "tz8yswWFr6LrL1xbsHV5JZPt7p-fkXY_VWpRFWKzk-I"
     },
     {
       "name": "V13-update-by-query",
-      "note": "An update by query resolved to 3 records: manifest_hash is the hash of the sorted identifier array.",
+      "note": "An update by query resolved to 3 records: manifest_hash is the HMAC-SHA-256 (S61, test key) of the manifest object.",
       "request_arguments": {
         "objectType": "contact",
         "filter": {
@@ -515,14 +515,63 @@
         "audience": "https://mcp.crm.example/mcp",
         "operation": "mcp:tools/call:update_by_query",
         "principal": "agent-EXAMPLE-sync",
-        "v": 1,
+        "v": 2,
         "resolved": {
           "count": 3,
-          "manifest_hash": "VbDcwQoHDxa4kzwOIzRsyV4efnpXZ0YMw3Y-mibtTjo"
+          "manifest_hash": "OGyTbB9fZDRnfB6hBtwNztxsbIOQZ-Th8BUGAI-wiDs"
         }
       },
-      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"filter\":{\"lifecycle_stage\":\"lead\"},\"objectType\":\"contact\",\"set\":{\"owner\":\"user-EXAMPLE-7\"}},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:update_by_query\",\"principal\":\"agent-EXAMPLE-sync\",\"resolved\":{\"count\":3,\"manifest_hash\":\"VbDcwQoHDxa4kzwOIzRsyV4efnpXZ0YMw3Y-mibtTjo\"},\"v\":1}",
-      "change_hash": "AuBLFXjc60JNXQ6UH3Wd4Wc_ihMslwVfLfqaULcK7i4"
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"filter\":{\"lifecycle_stage\":\"lead\"},\"objectType\":\"contact\",\"set\":{\"owner\":\"user-EXAMPLE-7\"}},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:update_by_query\",\"principal\":\"agent-EXAMPLE-sync\",\"resolved\":{\"count\":3,\"manifest_hash\":\"OGyTbB9fZDRnfB6hBtwNztxsbIOQZ-Th8BUGAI-wiDs\"},\"v\":2}",
+      "change_hash": "DXCTUY7aMMW0TVrFAm47svv_Bt0PTqN-jMX4Z4knGQc"
+    },
+    {
+      "name": "V14-request-key",
+      "note": "V1 with a precondition and the request key (S67): request_key is the SHA-256 of the object {v, audience, account, principal, operation, arguments}.",
+      "request_arguments": {
+        "objectType": "contact",
+        "action": "update",
+        "records": [
+          {
+            "id": "rec-EXAMPLE-42",
+            "properties": {
+              "lifecycle_stage": "customer",
+              "owner": "user-EXAMPLE-7"
+            }
+          }
+        ]
+      },
+      "approval_fields": [
+        "/confirmation"
+      ],
+      "change_object": {
+        "account": "acct-EXAMPLE-0001",
+        "arguments": {
+          "objectType": "contact",
+          "action": "update",
+          "records": [
+            {
+              "id": "rec-EXAMPLE-42",
+              "properties": {
+                "lifecycle_stage": "customer",
+                "owner": "user-EXAMPLE-7"
+              }
+            }
+          ]
+        },
+        "audience": "https://mcp.crm.example/mcp",
+        "operation": "mcp:tools/call:manage_records",
+        "principal": "agent-EXAMPLE-sync",
+        "v": 2,
+        "preconditions": [
+          {
+            "record": "rec-EXAMPLE-42",
+            "state_hash": "Udb6o3UJ7Mi_6wBIuASGF-XsXWK9o-9TMSXdUe9rB4k"
+          }
+        ]
+      },
+      "canonical": "{\"account\":\"acct-EXAMPLE-0001\",\"arguments\":{\"action\":\"update\",\"objectType\":\"contact\",\"records\":[{\"id\":\"rec-EXAMPLE-42\",\"properties\":{\"lifecycle_stage\":\"customer\",\"owner\":\"user-EXAMPLE-7\"}}]},\"audience\":\"https://mcp.crm.example/mcp\",\"operation\":\"mcp:tools/call:manage_records\",\"preconditions\":[{\"record\":\"rec-EXAMPLE-42\",\"state_hash\":\"Udb6o3UJ7Mi_6wBIuASGF-XsXWK9o-9TMSXdUe9rB4k\"}],\"principal\":\"agent-EXAMPLE-sync\",\"v\":2}",
+      "change_hash": "tz8yswWFr6LrL1xbsHV5JZPt7p-fkXY_VWpRFWKzk-I",
+      "request_key": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc"
     }
   ],
   "grant_example": {
@@ -550,13 +599,13 @@
         "iat": 1795000000,
         "exp": 1795000300,
         "jti": "rcpt-EXAMPLE-0001",
-        "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU",
+        "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc",
         "approver": {
           "type": "person",
           "id": "approver-EXAMPLE-ops-lead"
         }
       },
-      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMSIsImNoYW5nZV9oYXNoIjoiZ2RUcjM1aFU3TkhSbFdXd3B6dExlLW1QeHIwTGhoMzdYUFlHbmltaUZJVSIsImFwcHJvdmVyIjp7InR5cGUiOiJwZXJzb24iLCJpZCI6ImFwcHJvdmVyLUVYQU1QTEUtb3BzLWxlYWQifX0.f3ILBqP9zkaQrp-PSs-jBMY5kkKVMY4j1dsmcL7smU3MM3kLUym5VlP4BVioI3TYs3nlcUpdwSpy4pAmlrCdDw"
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMSIsImNoYW5nZV9oYXNoIjoiOVVWRWZ5b2p1aEtZTWJrMXBnakwxX1UtSDJvWUF4TEVnN3VKNFNuZk5qYyIsImFwcHJvdmVyIjp7InR5cGUiOiJwZXJzb24iLCJpZCI6ImFwcHJvdmVyLUVYQU1QTEUtb3BzLWxlYWQifX0.ebhYhuiFBU1WanjiSZKIMKf3HtxrZmuKsEjZbt-KV-BRCPSirQr9-iTyfKgRH_LaVojZO71kEubCKjCkWgSAAA"
     },
     "grant": {
       "claims": {
@@ -565,7 +614,7 @@
         "iat": 1795000000,
         "exp": 1795000300,
         "jti": "rcpt-EXAMPLE-0002",
-        "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU",
+        "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc",
         "approver": {
           "type": "grant",
           "id": "approver-EXAMPLE-ops-lead"
@@ -576,7 +625,7 @@
           "expires": 1795028800
         }
       },
-      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMiIsImNoYW5nZV9oYXNoIjoiZ2RUcjM1aFU3TkhSbFdXd3B6dExlLW1QeHIwTGhoMzdYUFlHbmltaUZJVSIsImFwcHJvdmVyIjp7InR5cGUiOiJncmFudCIsImlkIjoiYXBwcm92ZXItRVhBTVBMRS1vcHMtbGVhZCJ9LCJncmFudCI6eyJpZCI6ImdyYW50LUVYQU1QTEUtMDAwMSIsIm1heF9yZWNvcmRzIjo1MCwiZXhwaXJlcyI6MTc5NTAyODgwMH19.oRWPh35_YbB8RlR4oZk55uTSczZuutDqm1BA1FatkMbBhUNkl4hfTx_sRzPPWMUrvDqnt4bbi_si0JwPPYa2CA"
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMiIsImNoYW5nZV9oYXNoIjoiOVVWRWZ5b2p1aEtZTWJrMXBnakwxX1UtSDJvWUF4TEVnN3VKNFNuZk5qYyIsImFwcHJvdmVyIjp7InR5cGUiOiJncmFudCIsImlkIjoiYXBwcm92ZXItRVhBTVBMRS1vcHMtbGVhZCJ9LCJncmFudCI6eyJpZCI6ImdyYW50LUVYQU1QTEUtMDAwMSIsIm1heF9yZWNvcmRzIjo1MCwiZXhwaXJlcyI6MTc5NTAyODgwMH19.Dj5UW9IVZoGS3u_BtdaKRO8Sa3fQZvyzR_DQ093hzhtM3VF1fN1MU8PLvtq1tXPMw5r994-Rx2urNISz-7RXDA"
     },
     "policy": {
       "claims": {
@@ -585,7 +634,7 @@
         "iat": 1795000000,
         "exp": 1795000300,
         "jti": "rcpt-EXAMPLE-0003",
-        "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU",
+        "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc",
         "approver": {
           "type": "policy",
           "id": "policy-EXAMPLE-routine-updates"
@@ -595,7 +644,7 @@
           "version_hash": "-oM2NqGzTDdNYYyCpLHCp-O9xNB46aPwW2-qiL2-F-k"
         }
       },
-      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMyIsImNoYW5nZV9oYXNoIjoiZ2RUcjM1aFU3TkhSbFdXd3B6dExlLW1QeHIwTGhoMzdYUFlHbmltaUZJVSIsImFwcHJvdmVyIjp7InR5cGUiOiJwb2xpY3kiLCJpZCI6InBvbGljeS1FWEFNUExFLXJvdXRpbmUtdXBkYXRlcyJ9LCJwb2xpY3kiOnsiaWQiOiJwb2xpY3ktRVhBTVBMRS1yb3V0aW5lLXVwZGF0ZXMiLCJ2ZXJzaW9uX2hhc2giOiItb00yTnFHelREZE5ZWXlDcExIQ3AtTzl4TkI0NmFQd1cyLXFpTDItRi1rIn19.o7BqdFRW7FzFyDSu6mqNzYIphzhaOP8kbdnVGM5vqp7wV1X_K5Eh90xg3GeCS4aKwLtO56KBtNhoxt5C8IWiCQ"
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMyIsImNoYW5nZV9oYXNoIjoiOVVWRWZ5b2p1aEtZTWJrMXBnakwxX1UtSDJvWUF4TEVnN3VKNFNuZk5qYyIsImFwcHJvdmVyIjp7InR5cGUiOiJwb2xpY3kiLCJpZCI6InBvbGljeS1FWEFNUExFLXJvdXRpbmUtdXBkYXRlcyJ9LCJwb2xpY3kiOnsiaWQiOiJwb2xpY3ktRVhBTVBMRS1yb3V0aW5lLXVwZGF0ZXMiLCJ2ZXJzaW9uX2hhc2giOiItb00yTnFHelREZE5ZWXlDcExIQ3AtTzl4TkI0NmFQd1cyLXFpTDItRi1rIn19.91uA1QNHLCwNKPvuv6RFkwkixkLBbvoPtGm1jTe8Dc01rBEojmf53T_TidjdQaGsH1yrW-w_BxP4WxP79dRQAg"
     },
     "expired": {
       "claims": {
@@ -604,13 +653,13 @@
         "iat": 1794999100,
         "exp": 1794999400,
         "jti": "rcpt-EXAMPLE-0004",
-        "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU",
+        "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc",
         "approver": {
           "type": "person",
           "id": "approver-EXAMPLE-ops-lead"
         }
       },
-      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NDk5OTEwMCwiZXhwIjoxNzk0OTk5NDAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwNCIsImNoYW5nZV9oYXNoIjoiZ2RUcjM1aFU3TkhSbFdXd3B6dExlLW1QeHIwTGhoMzdYUFlHbmltaUZJVSIsImFwcHJvdmVyIjp7InR5cGUiOiJwZXJzb24iLCJpZCI6ImFwcHJvdmVyLUVYQU1QTEUtb3BzLWxlYWQifX0.WAONLcgccYE7j5hQtUM4HS2v30sjBEe3AjtgwnSq030DU2oVSUxys1_OaWdx7GqzLUaZ1pCzpv8bvlO4n7WkCw"
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NDk5OTEwMCwiZXhwIjoxNzk0OTk5NDAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwNCIsImNoYW5nZV9oYXNoIjoiOVVWRWZ5b2p1aEtZTWJrMXBnakwxX1UtSDJvWUF4TEVnN3VKNFNuZk5qYyIsImFwcHJvdmVyIjp7InR5cGUiOiJwZXJzb24iLCJpZCI6ImFwcHJvdmVyLUVYQU1QTEUtb3BzLWxlYWQifX0.iU48hMN8kUVUoho5_qE1iTU-9fg2xlCGrh4CvFb7hOb0e6NIke4aNTStWf7jKllXVfvZnc-c21W2sf0ulO2IBg"
     },
     "wrong_audience": {
       "claims": {
@@ -619,17 +668,19 @@
         "iat": 1795000000,
         "exp": 1795000300,
         "jti": "rcpt-EXAMPLE-0005",
-        "change_hash": "gdTr35hU7NHRlWWwpztLe-mPxr0Lhh37XPYGnimiFIU",
+        "change_hash": "9UVEfyojuhKYMbk1pgjL1_U-H2oYAxLEg7uJ4SnfNjc",
         "approver": {
           "type": "person",
           "id": "approver-EXAMPLE-ops-lead"
         }
       },
-      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLm90aGVyLmV4YW1wbGUvbWNwIiwiaWF0IjoxNzk1MDAwMDAwLCJleHAiOjE3OTUwMDAzMDAsImp0aSI6InJjcHQtRVhBTVBMRS0wMDA1IiwiY2hhbmdlX2hhc2giOiJnZFRyMzVoVTdOSFJsV1d3cHp0TGUtbVB4cjBMaGgzN1hQWUduaW1pRklVIiwiYXBwcm92ZXIiOnsidHlwZSI6InBlcnNvbiIsImlkIjoiYXBwcm92ZXItRVhBTVBMRS1vcHMtbGVhZCJ9fQ.rSSTGrdxSHQwSeuvsgIpqRSbGvI21uwosjm__FzXlNyy8-VhLZ2uUh33Ej6FTFOteNdNoxL9c7L4FZXY9i0fAg"
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLm90aGVyLmV4YW1wbGUvbWNwIiwiaWF0IjoxNzk1MDAwMDAwLCJleHAiOjE3OTUwMDAzMDAsImp0aSI6InJjcHQtRVhBTVBMRS0wMDA1IiwiY2hhbmdlX2hhc2giOiI5VVZFZnlvanVoS1lNYmsxcGdqTDFfVS1IMm9ZQXhMRWc3dUo0U25mTmpjIiwiYXBwcm92ZXIiOnsidHlwZSI6InBlcnNvbiIsImlkIjoiYXBwcm92ZXItRVhBTVBMRS1vcHMtbGVhZCJ9fQ.c8UZeMVCRHprucjynoalO3BkyHWR-IRAGds4v7PJ9GV5y4IKyEL9O0JUnHU4-k4VA7F9LIfpy1W6gvnMfLs0Ag"
     },
     "tampered_payload": {
       "note": "Payload replaced with the V4 hash; signature left unchanged. MUST fail verification.",
-      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMSIsImNoYW5nZV9oYXNoIjoidUNRY1ZjTXlyUEhDQUZCLWRQVHlIY1F4cnhKeUlfc2Fxa0kzUFZHcjdBSSIsImFwcHJvdmVyIjp7InR5cGUiOiJwZXJzb24iLCJpZCI6ImFwcHJvdmVyLUVYQU1QTEUtb3BzLWxlYWQifX0.f3ILBqP9zkaQrp-PSs-jBMY5kkKVMY4j1dsmcL7smU3MM3kLUym5VlP4BVioI3TYs3nlcUpdwSpy4pAmlrCdDw"
+      "jws": "eyJhbGciOiJFZERTQSIsImtpZCI6InRlc3Qta2V5LTEiLCJ0eXAiOiJhcHByb3ZhbC1yZWNlaXB0K2p3dCJ9.eyJpc3MiOiJodHRwczovL2FwcHJvdmFscy5vcmcuZXhhbXBsZSIsImF1ZCI6Imh0dHBzOi8vbWNwLmNybS5leGFtcGxlL21jcCIsImlhdCI6MTc5NTAwMDAwMCwiZXhwIjoxNzk1MDAwMzAwLCJqdGkiOiJyY3B0LUVYQU1QTEUtMDAwMSIsImNoYW5nZV9oYXNoIjoiRW83SFpnR0RGLWVGdGpUVFVNVHRBeUxQbHhBdV9Xa3lVd2ZycUJLa3h3byIsImFwcHJvdmVyIjp7InR5cGUiOiJwZXJzb24iLCJpZCI6ImFwcHJvdmVyLUVYQU1QTEUtb3BzLWxlYWQifX0.ebhYhuiFBU1WanjiSZKIMKf3HtxrZmuKsEjZbt-KV-BRCPSirQr9-iTyfKgRH_LaVojZO71kEubCKjCkWgSAAA"
     }
-  }
+  },
+  "state_manifest_hmac_key": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+  "state_manifest_hmac_key_note": "Test key for the S61 state_hash and manifest_hash vectors only. A deployed server MUST generate its own random key of at least 256 bits and MUST NOT use this key."
 }

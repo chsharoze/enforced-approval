@@ -130,5 +130,5 @@ export function cases({helpers:{setup,req,ask,browser,grant},call,A,sdk}) {
       assert(body.approval.message.includes('Approval page: '+body.approval.approval_url),body.approval.message);
     },
   ];
-  return {tests,names:['Decided links show their outcome','Error wording on decided and unknown links','Messages for people']};
+  return {tests,names:['Decided links','Error wording','Messages for people']};
 }

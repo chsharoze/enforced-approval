@@ -8,6 +8,8 @@ export function sign(claims, header = { alg: 'EdDSA', kid: jwk.kid, typ: 'approv
   return s + '.' + crypto.sign(header.alg === 'ES256' ? 'sha256' : null, Buffer.from(s), { key, dsaEncoding: 'ieee-p1363' }).toString('base64url');
 }
 const nonempty = x => typeof x === 'string' && x.length > 0;
+// The Off hook of item 4 (S7, Signed receipts Section 4).
+const mutatedReceipt = name => process.env.VA_MUTATE === name;
 export function parseReceipt(token, allowNone = false) {
   if (typeof token !== 'string' || Buffer.byteLength(token) > 8192) throw Error('receipt size/type');
   const parts = token.split('.'); if (parts.length !== 3 || parts.some(p => !/^[A-Za-z0-9_-]+$/.test(p) || Buffer.from(p, 'base64url').toString('base64url') !== p)) throw Error('encoding');
@@ -18,5 +20,11 @@ export function parseReceipt(token, allowNone = false) {
   if ((type === 'grant') !== Object.hasOwn(c,'grant') || (type === 'policy') !== Object.hasOwn(c,'policy')) throw Error('type mismatch');
   if (type === 'grant' && (!object(c.grant) || !nonempty(c.grant.id) || !Number.isSafeInteger(c.grant.max_records) || c.grant.max_records < 1 || !Number.isSafeInteger(c.grant.expires))) throw Error('grant');
   if (type === 'policy' && (!object(c.policy) || !nonempty(c.policy.id) || !nonempty(c.policy.version_hash))) throw Error('policy');
+  // Signed receipts profile Section 4: `policy.inputs`, when present, is "an array of
+  // objects, each with `ref` and `hash`". Each entry carries exactly those two non-empty
+  // strings; any other shape is refused (S7, Section 4). Off: receipt-inputs-unchecked.
+  if (type === 'policy' && Object.hasOwn(c.policy,'inputs') && !mutatedReceipt('receipt-inputs-unchecked')) {
+    if (!Array.isArray(c.policy.inputs) || c.policy.inputs.some(x => !object(x) || Object.keys(x).sort().join() !== 'hash,ref' || !nonempty(x.ref) || !nonempty(x.hash))) throw Error('policy inputs');
+  }
   return { header: h, claims: c, input: parts.slice(0,2).join('.'), signature: Buffer.from(parts[2], 'base64url') };
 }

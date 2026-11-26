@@ -21,6 +21,11 @@ function jcs(v) {
 }
 const b64u = b => Buffer.from(b).toString('base64url');
 const sha256 = s => crypto.createHash('sha256').update(s, 'utf8').digest();
+// Test-only HMAC key for the S61 state_hash and manifest_hash vectors. 256 bits
+// of public test material: a deployed server MUST generate its own random key.
+const hmacKeyHex = '0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef';
+const hmacKey = Buffer.from(hmacKeyHex, 'hex');
+const hmacSha256 = s => crypto.createHmac('sha256', hmacKey).update(s, 'utf8').digest();
 
 // Draft S3: integers beyond 2^53-1 are refused in guarded arguments, because parsers
 // round them silently. Duplicate member names cannot be seen after parsing; a server
@@ -35,12 +40,19 @@ function changeObject({ audience, account, principal, operation, args = {}, appr
   const a = { ...args };
   for (const f of approvalFields) delete a[f.slice(1)]; // JSON Pointers to top-level members only in these vectors
   profileCheck(a);
-  const c = { account, arguments: a, audience, operation, principal, v: 1 };
+  const c = { account, arguments: a, audience, operation, principal, v: 2 };
   if (preconditions) c.preconditions = preconditions;
   if (resolved) c.resolved = resolved;
   return c;
 }
 const changeHash = c => b64u(sha256(jcs(c)));
+// S61: state_hash and manifest_hash are HMAC-SHA-256 under the server's secret key.
+const stateHash = ({ audience, account, operation, record, state }) =>
+  b64u(hmacSha256(jcs({ purpose: 'enforced-approval/state_hash/2', audience, account, operation, record, state })));
+const manifestHash = ({ audience, account, operation, arguments: args, records }) =>
+  b64u(hmacSha256(jcs({ purpose: 'enforced-approval/manifest_hash/2', audience, account, operation, arguments: args, records })));
+// S67: the request key of a covered operation, independent of record state.
+const requestKey = c => b64u(sha256(jcs({ v: c.v, audience: c.audience, account: c.account, principal: c.principal, operation: c.operation, arguments: c.arguments })));
 
 // Fixed Ed25519 test key: the secret seed of RFC 8032 Section 7.1, TEST 1.
 // Public test material. Never use it outside these vectors.
@@ -79,9 +91,9 @@ const baseCall = {
 };
 
 const vectors = [];
-function vec(name, call, note) {
+function vec(name, call, note, extra) {
   const c = changeObject(call);
-  const out = { name, note, request_arguments: call.args ?? null, approval_fields: call.approvalFields ?? [], change_object: c, canonical: jcs(c), change_hash: changeHash(c) };
+  const out = { name, note, request_arguments: call.args ?? null, approval_fields: call.approvalFields ?? [], change_object: c, canonical: jcs(c), change_hash: changeHash(c), ...(extra ? extra(c) : {}) };
   vectors.push(out);
   return out;
 }
@@ -110,18 +122,23 @@ const v11 = vec('V11-no-arguments', { ...baseCall, operation: 'mcp:tools/call:ru
   'A call with no arguments member: arguments is the empty object.');
 
 const current = { lifecycle_stage: 'lead', owner: 'user-EXAMPLE-3' };
-const v12 = vec('V12-precondition', { ...baseCall, preconditions: [{ record: 'rec-EXAMPLE-42', state_hash: b64u(sha256(jcs(current))) }] },
-  'V1 with a precondition: state_hash is the hash of the current values {"lifecycle_stage":"lead","owner":"user-EXAMPLE-3"}.');
+const preconditions = [{ record: 'rec-EXAMPLE-42', state_hash: stateHash({ audience, account, operation: baseCall.operation, record: 'rec-EXAMPLE-42', state: { kind: 'fields', value: current } }) }];
+const v12 = vec('V12-precondition', { ...baseCall, preconditions },
+  'V1 with a precondition: state_hash is the HMAC-SHA-256 (S61, test key) of the current values {"lifecycle_stage":"lead","owner":"user-EXAMPLE-3"}.');
 const ids = ['rec-EXAMPLE-11', 'rec-EXAMPLE-12', 'rec-EXAMPLE-13'];
+const queryArgs = { objectType: 'contact', filter: { lifecycle_stage: 'lead' }, set: { owner: 'user-EXAMPLE-7' } };
 const v13 = vec('V13-update-by-query', { ...baseCall, operation: 'mcp:tools/call:update_by_query', approvalFields: [],
-  args: { objectType: 'contact', filter: { lifecycle_stage: 'lead' }, set: { owner: 'user-EXAMPLE-7' } },
-  resolved: { count: ids.length, manifest_hash: b64u(sha256(jcs([...ids].sort()))) } },
-  'An update by query resolved to 3 records: manifest_hash is the hash of the sorted identifier array.');
+  args: queryArgs,
+  resolved: { count: ids.length, manifest_hash: manifestHash({ audience, account, operation: 'mcp:tools/call:update_by_query', arguments: queryArgs, records: [...ids].sort() }) } },
+  'An update by query resolved to 3 records: manifest_hash is the HMAC-SHA-256 (S61, test key) of the manifest object.');
+const v14 = vec('V14-request-key', { ...baseCall, preconditions },
+  'V1 with a precondition and the request key (S67): request_key is the SHA-256 of the object {v, audience, account, principal, operation, arguments}.',
+  c => ({ request_key: requestKey(c) }));
 
 const assert = (c, m) => { if (!c) { console.error('SELF-CHECK FAILED: ' + m); process.exit(1); } };
 assert(v2.change_hash === v1.change_hash, 'V2 == V1');
 assert(v3.change_hash === v1.change_hash, 'V3 == V1');
-for (const v of [v4, v5, v6, v7, v8, v9, v10, v11, v12, v13]) assert(v.change_hash !== v1.change_hash, v.name + ' != V1');
+for (const v of [v4, v5, v6, v7, v8, v9, v10, v11, v12, v13, v14]) assert(v.change_hash !== v1.change_hash, v.name + ' != V1');
 // RFC 8785 Section 3.2.3 sample for key sorting and primitives.
 assert(jcs({ numbers: [333333333.33333329, 1e30, 4.5, 2e-3, 1e-27], string: '€$\u000f\nA\'B"\\\\"/', literals: [null, true, false] }) ===
   '{"literals":[null,true,false],"numbers":[333333333.3333333,1e+30,4.5,0.002,1e-27],"string":"€$\\u000f\\nA\'B\\"\\\\\\\\\\"/"}', 'RFC 8785 sample');
@@ -161,4 +178,6 @@ receipts.tampered_payload = { note: 'Payload replaced with the V4 hash; signatur
 console.log(JSON.stringify({
   note: 'Test vectors for the Enforced Approval draft. Placeholders only. Generated by make-vectors.mjs; do not edit by hand.',
   now: T0, issuer, issuer_jwks: { keys: [jwk] }, change_hash_vectors: vectors, grant_example: grant, receipts,
+  state_manifest_hmac_key: hmacKeyHex,
+  state_manifest_hmac_key_note: 'Test key for the S61 state_hash and manifest_hash vectors only. A deployed server MUST generate its own random key of at least 256 bits and MUST NOT use this key.',
 }, null, 2));

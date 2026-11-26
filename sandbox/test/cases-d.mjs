@@ -114,5 +114,5 @@ export function cases({helpers:{setup,req,ask,browser,grant},call,A,sdk}) {
       });
     },
   ];
-  return {tests,names:['Words, not identifiers','Readable error pages','Invalid input names its cause','Reason on the elicitation']};
+  return {tests,names:['Words, not identifiers','Readable errors','Invalid input names its cause','Reason on the elicitation']};
 }
